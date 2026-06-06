@@ -1,4 +1,7 @@
 FROM node:trixie-slim
+LABEL org.opencontainers.image.source=https://github.com/Rain-0x01-39/Yunzai
+LABEL org.opencontainers.image.description="水"
+LABEL org.opencontainers.image.licenses=MIT
 
 WORKDIR /trss
 
@@ -21,7 +24,7 @@ RUN mkdir -p data temp
 COPY . .
 
 RUN mkdir -p /defaults/config /defaults/plugins && \
-    cp -r /trss/config/* /defaults/config/ \
+    cp -r /trss/config/* /defaults/config/ && \
     cp -r /trss/plugins/* /defaults/plugins/
 
 EXPOSE 2536
