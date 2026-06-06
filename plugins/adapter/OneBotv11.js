@@ -613,6 +613,15 @@ Bot.adapter.push(
       })
     }
 
+    async getPrivateFileUrl(data, file_id) {
+      return (
+        await data.bot.sendApi("get_private_file_url", {
+          user_id: data.user_id,
+          file_id,
+        })
+      ).url
+    }
+
     async sendGroupFile(data, file, folder, name = path.basename(file)) {
       Bot.makeLog(
         "info",
@@ -747,6 +756,7 @@ Bot.adapter.push(
         getChatHistory: this.getFriendMsgHistory.bind(this, i),
         thumbUp: this.sendLike.bind(this, i),
         delete: this.deleteFriend.bind(this, i),
+        getFileUrl: this.getPrivateFileUrl.bind(this, i),
       }
     }
 
@@ -1147,7 +1157,7 @@ Bot.adapter.push(
             `${data.self_id} <= ${data.group_id}`,
             true,
           )
-          data.bot.pickMember(data.group_id, data.user_id).getInfo()
+          if (data.user_id !== 0) data.bot.pickMember(data.group_id, data.user_id).getInfo()
           break
         case "group_msg_emoji_like":
           Bot.makeLog(
@@ -1179,6 +1189,22 @@ Bot.adapter.push(
                 Bot.makeLog(
                   "info",
                   `好友戳一戳：${data.operator_id} => ${data.target_id}`,
+                  data.self_id,
+                )
+              break
+            case "poke_recall":
+              data.operator_id = data.user_id
+              if (data.group_id)
+                Bot.makeLog(
+                  "info",
+                  `群戳一戳撤回：${data.operator_id} => ${data.target_id}`,
+                  `${data.self_id} <= ${data.group_id}`,
+                  true,
+                )
+              else
+                Bot.makeLog(
+                  "info",
+                  `好友戳一戳撤回：${data.operator_id} => ${data.target_id}`,
                   data.self_id,
                 )
               break
