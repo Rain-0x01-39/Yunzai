@@ -33,3 +33,8 @@ jobs:
         upstream_sync_repo: TimeRainStarSky/Yunzai
         upstream_pull_args: ''
         target_branch_push_args: ''
+
+    # Step 3: Display a sample message based on the sync output var 'has_new_commits'
+    - name: No new commits
+      if: steps.sync.outputs.has_new_commits == 'false'
+      run: echo "There were no new commits."
